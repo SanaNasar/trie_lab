@@ -17,13 +17,58 @@ Trie.prototype.learn = function(word, index){
   // A word does not necessarily end at a leaf.
   // You must mark nodes which are the ends of words,
   // so that the words can be reconstructed later.
-};
+
+  // char = word[index];
+
+  // if (!this.characters[char]) {
+  //   this.characters[char] = new Trie();
+  // }
+
+  // if (index < word.length - 1) {
+  //   this.characters[char].learn(word, index + 1);
+  // }
+  //   else {
+  //     this.isWord = true;
+  //   }
+
+  if(index === undefined){
+      index=0;
+    }
+    if(index<word.length){
+      var letter=word[index];
+      if(this.characters[letter]===undefined){
+        //create new Trie
+        this.characters[letter]= new Trie();
+      }
+      //move on through new or existing Trie
+      index++;
+      this.characters[letter].learn(word,index);
+
+    }else{
+
+      this.isWord=true;
+    }
+  };
+
 
 Trie.prototype.getWords = function(words, currentWord){
   // This function will return all the words which are
   // contained in this Trie.
   // it will use currentWord as a prefix,
   // since a Trie doesn't know about its parents.
+
+  // if is word is true then return all the words
+  // if it's not true then call the function
+  words = words || [];
+  currentWord = currentWord || "";
+  if (this.isWord) {
+    words.push(currentWord);
+  }
+  for (var lettr in this.characters)
+  {
+    this.characters[lettr].getWords(words, currentWord = lettr);
+  }
+  return words;
 };
 
 Trie.prototype.find = function(word, index){
@@ -40,7 +85,7 @@ Trie.prototype.autoComplete = function(prefix){
 };
 
 try{
-  module.exports = Trie
+  module.exports = Trie;
 } catch(e){
 
 }
